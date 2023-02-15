@@ -44,6 +44,7 @@ class OFAMobileNetV3(MobileNetV3):
         self.depth_list.sort()
 
         base_stage_width = [16, 16, 24, 40, 80, 112, 160, 960, 1280]
+        base_stage_width = [i / 4 for i in base_stage_width]
 
         final_expand_width = make_divisible(
             base_stage_width[-2] * self.width_mult, MyNetwork.CHANNEL_DIVISIBLE
@@ -66,7 +67,7 @@ class OFAMobileNetV3(MobileNetV3):
         input_channel, first_block_dim = width_list[0], width_list[1]
         # first conv layer
         first_conv = ConvLayer(
-            3, input_channel, kernel_size=3, stride=2, act_func="h_swish"
+            1, input_channel, kernel_size=3, stride=2, act_func="h_swish"
         )
         first_block_conv = MBConvLayer(
             in_channels=input_channel,

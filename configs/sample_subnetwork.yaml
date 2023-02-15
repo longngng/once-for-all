@@ -1,0 +1,22 @@
+# For hydra. Do not change
+hydra:  
+  output_subdir: null  
+  run:  
+    dir: .
+
+# Dataset
+test_csv_path: dataset/271022/mitbih_test.csv
+val_csv_path: dataset/271022/mitbih_val.csv
+
+# ProxylessNAS sampling parameters
+model_config:
+  'ks': [5, 5, 3, 5, 3, 5, 3, 5, 5, 3, 3, 5, 5, 5, 5, 3]
+  'e': [3, 3, 4, 3, 3, 4, 2, 4, 3, 4, 2, 4, 4, 2, 4, 2]
+  'd': [3, 3, 2, 3, 3, 1]
+
+saved_pth_dict_path: "exp/kernel_depth2kernel_depth_width/phase2/checkpoint/checkpoint.pth.tar"
+output_onnx_model: "output_models/190123/subnet_2.onnx"
+
+defaults:  
+  - override hydra/hydra_logging: disabled  
+  - override hydra/job_logging: disabled

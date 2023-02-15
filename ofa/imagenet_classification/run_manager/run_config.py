@@ -3,9 +3,9 @@
 # International Conference on Learning Representations (ICLR), 2020.
 
 from ofa.utils import calc_learning_rate, build_optimizer
-from ofa.imagenet_classification.data_providers import ImagenetDataProvider
+from ofa.imagenet_classification.data_providers import ImagenetDataProvider, ECGDataProvider
 
-__all__ = ["RunConfig", "ImagenetRunConfig", "DistributedImageNetRunConfig"]
+__all__ = ["RunConfig", "ImagenetRunConfig", "ECGRunConfig", "DistributedImageNetRunConfig"]
 
 
 class RunConfig:
@@ -186,6 +186,69 @@ class ImagenetRunConfig(RunConfig):
                 resize_scale=self.resize_scale,
                 distort_color=self.distort_color,
                 image_size=self.image_size,
+            )
+        return self.__dict__["_data_provider"]
+
+
+
+class ECGRunConfig(RunConfig):
+    def __init__(
+        self,
+        n_epochs=150,
+        init_lr=0.05,
+        lr_schedule_type="cosine",
+        lr_schedule_param=None,
+        dataset="mit-bih",
+        train_batch_size=256,
+        test_batch_size=500,
+        valid_size=None,
+        opt_type="sgd",
+        opt_param=None,
+        weight_decay=4e-5,
+        label_smoothing=0.1,
+        no_decay_keys=None,
+        mixup_alpha=None,
+        model_init="he_fout",
+        validation_frequency=1,
+        print_frequency=10,
+        n_worker=32,
+        **kwargs
+    ):
+        super(ECGRunConfig, self).__init__(
+            n_epochs,
+            init_lr,
+            lr_schedule_type,
+            lr_schedule_param,
+            dataset,
+            train_batch_size,
+            test_batch_size,
+            valid_size,
+            opt_type,
+            opt_param,
+            weight_decay,
+            label_smoothing,
+            no_decay_keys,
+            mixup_alpha,
+            model_init,
+            validation_frequency,
+            print_frequency,
+        )
+
+        self.n_worker = n_worker
+
+
+    @property
+    def data_provider(self):
+        if self.__dict__.get("_data_provider", None) is None:
+            if self.dataset == ECGDataProvider.name():
+                DataProviderClass = ECGDataProvider
+            else:
+                raise NotImplementedError
+            self.__dict__["_data_provider"] = DataProviderClass(
+                train_batch_size=self.train_batch_size,
+                test_batch_size=self.test_batch_size,
+                valid_size=self.valid_size,
+                n_worker=self.n_worker
             )
         return self.__dict__["_data_provider"]
 

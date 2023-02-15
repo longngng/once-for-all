@@ -47,7 +47,7 @@ class OFAProxylessNASNets(ProxylessNASNets):
         else:
             # ProxylessNAS Stage Width
             base_stage_width = [32, 16, 24, 40, 80, 96, 192, 320, 1280]
-
+        base_stage_width = [i / 4 for i in base_stage_width]
         input_channel = make_divisible(
             base_stage_width[0] * self.width_mult, MyNetwork.CHANNEL_DIVISIBLE
         )
@@ -60,7 +60,7 @@ class OFAProxylessNASNets(ProxylessNASNets):
 
         # first conv layer
         first_conv = ConvLayer(
-            3,
+            1,
             input_channel,
             kernel_size=3,
             stride=2,
