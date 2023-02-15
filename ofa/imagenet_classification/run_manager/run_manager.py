@@ -54,7 +54,7 @@ class RunManager:
             self.device = torch.device("cpu")
         # initialize model (default)
         if init:
-            init_models(run_config.model_init)
+            init_models(self.net, run_config.model_init)
 
         # net info
         net_info = get_net_info(
@@ -67,8 +67,8 @@ class RunManager:
                 fout.write(self.network.module_str + "\n")
             except Exception:
                 pass
-            fout.write("%s\n" % self.run_config.data_provider.train.dataset.transform)
-            fout.write("%s\n" % self.run_config.data_provider.test.dataset.transform)
+            # fout.write("%s\n" % self.run_config.data_provider.train.dataset.transform)
+            # fout.write("%s\n" % self.run_config.data_provider.test.dataset.transform)
             fout.write("%s\n" % self.network)
 
         # criterion
@@ -107,6 +107,7 @@ class RunManager:
         self.optimizer = self.run_config.build_optimizer(net_params)
 
         self.net = torch.nn.DataParallel(self.net)
+        self.net = self.net.double()
 
     """ save path and log path """
 
