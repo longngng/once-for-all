@@ -135,7 +135,7 @@ if __name__ == "__main__":
     os.makedirs(args.path, exist_ok=True)
 
     args.teacher_path = download_url(
-        "https://hanlab.mit.edu/files/OnceForAll/ofa_checkpoints/ofa_D4_E6_K7",
+        "https://raw.githubusercontent.com/han-cai/files/master/ofa/ofa_checkpoints/ofa_D4_E6_K7",
         model_dir=".torch/ofa_checkpoints/%d" % 0,
     )
 

@@ -23,8 +23,9 @@ __all__ = [
 ]
 
 
-def ofa_specialized(net_id, pretrained=True):
-    url_base = "https://hanlab.mit.edu/files/OnceForAll/ofa_specialized/"
+def ofa_specialized(net_id: str, pretrained=True):
+    url_base = "https://raw.githubusercontent.com/han-cai/files/master/ofa/ofa_specialized/"
+    net_id = net_id.replace("@", "-")
     net_config = json.load(
         open(
             download_url(
@@ -57,6 +58,8 @@ def ofa_specialized(net_id, pretrained=True):
 
 
 def ofa_net(net_id, pretrained=True):
+    url_base = "https://raw.githubusercontent.com/han-cai/files/master/ofa/ofa_nets/"
+    googledrive = False
     if net_id == "ofa_proxyless_d234_e346_k357_w1.3":
         net = OFAProxylessNASNets(
             dropout_rate=0,
@@ -88,29 +91,31 @@ def ofa_net(net_id, pretrained=True):
             expand_ratio_list=[0.2, 0.25, 0.35],
             width_mult_list=[0.65, 0.8, 1.0],
         )
-        net_id = "ofa_resnet50_d=0+1+2_e=0.2+0.25+0.35_w=0.65+0.8+1.0"
+        net_id = "ofa_supernet_resnet50"
+        url_base = "https://huggingface.co/han-cai/ofa/resolve/main/"
     else:
         raise ValueError("Not supported: %s" % net_id)
 
     if pretrained:
-        url_base = "https://hanlab.mit.edu/files/OnceForAll/ofa_nets/"
-        init = torch.load(
-            download_url(url_base + net_id, model_dir=".torch/ofa_nets"),
-            map_location="cpu",
-        )["state_dict"]
+        if googledrive:
+            pt_path = f".torch/ofa_nets/{net_id}"
+            gdown.download(url_base, pt_path, quiet=False)
+        else:
+            pt_path = download_url(url_base + net_id, model_dir=".torch/ofa_nets")
+        init = torch.load(pt_path, map_location="cpu")["state_dict"]
         net.load_state_dict(init)
     return net
 
 
 def proxylessnas_net(net_id, pretrained=True):
     net = proxyless_base(
-        net_config="https://hanlab.mit.edu/files/proxylessNAS/%s.config" % net_id,
+        net_config="https://raw.githubusercontent.com/han-cai/files/master/proxylessnas/%s.config" % net_id,
     )
     if pretrained:
         net.load_state_dict(
             torch.load(
                 download_url(
-                    "https://hanlab.mit.edu/files/proxylessNAS/%s.pth" % net_id
+                    "https://raw.githubusercontent.com/han-cai/files/master/proxylessnas/%s.pth" % net_id
                 ),
                 map_location="cpu",
             )["state_dict"]

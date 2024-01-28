@@ -2,15 +2,16 @@
 Also refer to README from [here](https://github.com/mit-han-lab/once-for-all/blob/master/README.md) for more informations in the repo
 
 ## Prepare the dataset
-Using the ecg-tinyml repo, generate the three .csv files and place them under `~/dataset/` as below
+Using the ecg-tinyml repo, generate the three .csv files, or use the prepared mitbih.zip and extract it under `$HOME/dataset/mitbih` as below
 ```
 ├── dataset
-│   ├── mitbih_test.csv
-│   ├── mitbih_train.csv
-│   ├── mitbih_val.csv
+    ├──mitbih
+        ├── mitbih_test.csv
+        ├── mitbih_train.csv
+        ├── mitbih_val.csv
 ```
 
-If you want to use the dataset placed elsewhere, please change the directory at `ofa/imagenet_classification/data_providers/mitbih.py`
+If you want to use the dataset placed elsewhere, please change the directory specified at `ofa/imagenet_classification/data_providers/mitbih.py`
 
 ## Prepare the environment
 Use the same environment as from ecg-tinyml repo
